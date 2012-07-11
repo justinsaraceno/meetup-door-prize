@@ -40,8 +40,9 @@ function getWinnerDetails(userId) {
     $.getJSON('https://api.meetup.com/2/member/' + userId + '?key=' + apiKey + '&sign=true&callback=?', function (data) {
         if (data != null) {
             console.debug(data.name);
+            $('#winnerInfo').show();
             $('#winnerInfo').empty();
-            $('#winnerInfo').append('<p>' + data.name + '</p>');
+            $('#winnerInfo').append('<p><strong>' + data.name + '</strong></p>');
             $('#winnerInfo').append('<p>' + data.city + ', ' + data.state + '</p>');
             if (data.photo != null) {
                 $('#winnerInfo').append('<img src="' + data.photo.photo_link + '" />');
