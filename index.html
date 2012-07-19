@@ -26,6 +26,9 @@
                         <li><a href="#about">About</a></li>
                         <li><a href="https://twitter.com/JustinSaraceno">Contact</a></li>
                     </ul>
+                    <ul class="nav pull-right">
+                        <li id="connect"><a href="#">Connect with Meetup</a></li>
+                    </ul>
                 </div>
                 <!--/.nav-collapse -->
             </div>
@@ -79,6 +82,45 @@
     <script src="scripts/jquery.dateFormat-1.0.js" type="text/javascript"></script>
     <script src="scripts/meetup.event.data.js" type="text/javascript"></script>
     <script src="scripts/private.keys.js" type="text/javascript"></script>
-    <script src="http//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="scripts/mu.api.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        // initialize api
+        api = mu.Api({
+            clientId: "jd6cpjbd8v063nkgn52dpst4g1"
+          , onMember: function (member, token) {
+              //$("#connect").hide();
+              $("#disconnect").show();
+              $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
+                        "&member_id=self&fields=short_link&page=10&callback=?", function (evts) {
+                            var el = $("#events"), buff = [];
+                            $.map(evts.results, function (e) {
+                                buff.push('<li>' + e.name.link(e.short_link) + '</li>');
+                            });
+                            el.append(buff.join(''));
+                        });
+              $("#connect").html(
+                  "<a href='#' id='disconnect'>Logout " + member.name + "</a>");
+          }
+        });
+        
+        (function ($) {
+            $(function () {
+                $("#connect").live('click', function (e) {
+                    e.preventDefault();
+                    api.login();
+                    return false;
+                });
+                $("#disconnect").live('click', function (e) {
+                    e.preventDefault();
+                    api.logout(function () {
+                        $("#disconnect").hide(); $("#connect").show();
+                        window.location.reload();
+                    });
+                    return false;
+                });
+            });
+        })(jQuery);
+    </script>
 </body>
 </html>
