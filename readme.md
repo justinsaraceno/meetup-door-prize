@@ -17,5 +17,7 @@ In the textbox for the event url, enter the direct URL of your event and press t
 If the event was found, it will be listed below the URL box.
 Now press the 'Choose Winner' button to select a random winner.
 
+Try it our at [http://www.meetupdoorprize.com/](http://www.meetupdoorprize.com/).
+
 ##Man, that's ugly!
 Yeah, this is a work in progress.  You have some deisgn skills?  Put them to work and I'll give you credit.
