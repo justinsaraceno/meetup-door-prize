@@ -1,13 +1,10 @@
-﻿/// <reference path="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" />
-
-
-var attendees = new Array();
-//var winners = new Array();
+﻿var attendees = new Array();
+var attendeeCount = 0;
 
 $(document).ready(function ($) {
     $("#chooseWinner").click(function (e) {
         e.preventDefault;
-        chooseWinnerId($.url(eventUrl.value).segment(2));
+        chooseWinnerId();
         return false;
     });
 
@@ -52,43 +49,42 @@ function getEventDetails(eventUrl) {
                     console.log("attendees array filled");
                 }
             }
+            attendeeCount = attendees.length;
         });
     }
 }
 
 // choose winner logic
-function chooseWinnerId(eventId) {
+function chooseWinnerId() {
     var randomRsvp = Math.floor(Math.random() * attendees.length);
     var userId = attendees[randomRsvp];
     console.log('user id=' + userId);
     getWinnerDetails(userId);
-    //winners[winners.length] = userId;
     attendees = $.grep(attendees, function (value) {
         return value != userId;
     });
-    console.log("attendees length=" + attendees.length);
-    //console.log("winners length=" + winners.length);
-    
+    //console.log("attendees length=" + attendees.length);
 }
 
 function getWinnerDetails(userId) {
     $.getJSON('https://api.meetup.com/2/member/' + userId + '?key=' + apiKey + '&sign=true&callback=?', function (data) {
         if (data != null) {
-            console.debug(data.name);
             $('#winnerInfo').show();
-            //$('#winnerInfo').empty();
-            //$('#winnerInfo').prepend("<hr>");
-            //$('#winnerInfo').prepend('<p>' + data.city + ', ' + data.state + '</p>');
-            //$('#winnerInfo').prepend('<p><strong>' + data.name + '</strong></p>');
-            //if (data.photo != null) {
-            //    $('#winnerInfo').prepend('<img src="' + data.photo.thumb_link + '" />');
-            //}
+            // remove green alert background
+            $('div').removeClass('alert-info');
 
-            $('#winnerInfo').prepend('<p>' + data.city + ', ' + data.state + '</p>');
-            $('#winnerInfo').prepend('<p><strong>' + data.name + '</strong></p>');
+            var winnerHTML = '<div class="span2 thumbnail alert alert-info" style="height:150px; text-align: center; position: relative;">';
             if (data.photo != null) {
-                $('#winnerInfo').prepend('<img src="' + data.photo.thumb_link + '" />');
+                winnerHTML += '<div ><img src="' + data.photo.thumb_link + '" /></div>';
             }
+            else {
+                winnerHTML += '<div><img src="./images/nophoto.gif" /></div>';
+            }
+            winnerHTML += '<div><strong>' + data.name + '</strong></div>';
+            winnerHTML += '<div>' + data.city + ', ' + data.state + '</div>';
+            winnerHTML += '<span class="badge" style="position: absolute; bottom: 0;">' + (attendeeCount - attendees.length) + '</span>';
+            winnerHTML += '</div>';
+            $('#winnerInfo2').prepend(winnerHTML);
         }
     });
 }
