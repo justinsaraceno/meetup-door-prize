@@ -1,6 +1,73 @@
 ﻿var attendees = new Array();
 var attendeeCount = 0;
+var meetupService;
+var prodOauthId = 'jd6cpjbd8v063nkgn52dpst4g1';
+var testOauthId = 'bb1ecshn38h6crhq2pf0gm5po2';
 
+// initialize api
+api = mu.Api({
+    clientId: testOauthId
+  , onMember: function (member, token) {
+      //$("#connect").hide();
+      $("#disconnect").show();
+      $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
+                "&member_id=self&fields=short_link&page=10&callback=?", function (evts) {
+                    var el = $("#events"), buff = [];
+                    $.map(evts.results, function (e) {
+                        buff.push('<li>' + e.name.link(e.short_link) + '</li>');
+                    });
+                    el.append(buff.join(''));
+                });
+      $("#connect").html(
+          "<a href='#' id='disconnect'>Logout " + member.name + "</a>");
+      
+      // ajax calls
+      meetupService = new function () {
+          var serviceBase = 'https://api.meetup.com',
+              getEvent = function (eventId, callback) {
+                  $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { access_token: token }, function (data) {
+                      callback(data);
+                  });
+              },
+              getWinnerDetails = function (userId, callback) {
+                  $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { access_token: token }, function (data) {
+                      callback(data);
+                  });
+              },
+              getRsvps = function (eventId, rsvp, callback) {
+                  $.getJSON(serviceBase + '/2/rsvps?callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
+                      callback(data);
+                  });
+              };
+
+          return {
+              getEvent: getEvent,
+              getRsvps: getRsvps,
+              getWinnerDetails: getWinnerDetails
+          };
+      }();
+  }
+});
+
+(function ($) {
+    $(function () {
+        $("#connect").live('click', function (e) {
+            e.preventDefault();
+            api.login();
+            return false;
+        });
+        $("#disconnect").live('click', function (e) {
+            e.preventDefault();
+            api.logout(function () {
+                $("#disconnect").hide(); $("#connect").show();
+                window.location.reload();
+            });
+            return false;
+        });
+    });
+})(jQuery);
+
+// doc ready
 $(document).ready(function ($) {
     $("#chooseWinner").click(function (e) {
         e.preventDefault;
@@ -14,32 +81,6 @@ $(document).ready(function ($) {
         return false;
     });
 });
-
-// ajax calls
-var meetupService = new function() {
-    var serviceBase = 'https://api.meetup.com',
-        getEvent = function(eventId, callback) {
-            $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { key: apiKey }, function (data) {
-                callback(data);
-            });
-        },
-        getWinnerDetails = function(userId, callback) {
-            $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { key: apiKey }, function (data) {
-                callback(data);
-            });
-        },
-        getRsvps = function(eventId, rsvp, callback) {
-            $.getJSON(serviceBase + '/2/rsvps?callback=?', { key : apiKey, rsvp : 'yes', event_id : eventId }, function(data) {
-                callback(data);
-            });
-        };
-
-    return {
-        getEvent: getEvent,
-        getRsvps : getRsvps,
-        getWinnerDetails: getWinnerDetails
-    };
-}();
 
 // event data logic
 function getEventDetails(eventUrl) {
