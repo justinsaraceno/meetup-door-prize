@@ -15,6 +15,34 @@ $(document).ready(function ($) {
     });
 });
 
+var meetupService = new function() {
+    var serviceBase = 'https://api.meetup.com',
+        getEvent = function(eventId, callback) {
+            //$.getJSON(serviceBase + '/2/event/' + eventId + '?key=' + apiKey + '&callback=?', function(data) {
+            //    callback(data);
+            //});
+            $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { key: apiKey }, function (data) {
+                callback(data);
+            });
+        },
+        getWinnerDetails = function(userId, callback) {
+            $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { key: apiKey }, function (data) {
+                callback(data);
+            });
+        },
+        getRsvps = function(eventId, rsvp, callback) {
+            $.getJSON(serviceBase + '/2/rsvps?callback=?', { key : apiKey, rsvp : 'yes', event_id : eventId }, function(data) {
+                callback(data);
+            });
+        };
+
+    return {
+        getEvent: getEvent,
+        getRsvps : getRsvps,
+        getWinnerDetails: getWinnerDetails
+    };
+}();
+
 // event data logic
 function getEventDetails(eventUrl) {
     var eventId = $.url(eventUrl).segment(2);
@@ -22,7 +50,7 @@ function getEventDetails(eventUrl) {
     //winners.length = 0;
     if(eventId != null) {
         $('#main').show();
-        $.getJSON('https://api.meetup.com/2/event/' + eventId + '?key=' + apiKey + '&signed=true&callback=?', function (data) {
+        meetupService.getEvent(eventId, function(data) {
             var list = $('#eventList');
             list.empty();
 
@@ -41,12 +69,12 @@ function getEventDetails(eventUrl) {
         });
 
         // get 'yes' rsvp's
-        $.getJSON('https://api.meetup.com/2/rsvps?key=' + apiKey + '&sign=true&rsvp=yes&event_id=' + eventId + '&callback=?', function (data) {
+        meetupService.getRsvps(eventId, 'yes', function(data) {
             if (data.results.length > 0) {
                 var i = 0;
                 for (i = 0; i < data.results.length; i++) {
                     attendees[i] = [data.results[i].member.member_id];
-                    console.log("attendees array filled");
+                    //console.log("attendees array filled");
                 }
             }
             attendeeCount = attendees.length;
@@ -58,7 +86,7 @@ function getEventDetails(eventUrl) {
 function chooseWinnerId() {
     var randomRsvp = Math.floor(Math.random() * attendees.length);
     var userId = attendees[randomRsvp];
-    console.log('user id=' + userId);
+    //console.log('user id=' + userId);
     getWinnerDetails(userId);
     attendees = $.grep(attendees, function (value) {
         return value != userId;
@@ -67,7 +95,7 @@ function chooseWinnerId() {
 }
 
 function getWinnerDetails(userId) {
-    $.getJSON('https://api.meetup.com/2/member/' + userId + '?key=' + apiKey + '&sign=true&callback=?', function (data) {
+    meetupService.getWinnerDetails(userId, function(data) {
         if (data != null) {
             $('#winnerInfo').show();
             // remove green alert background
@@ -76,8 +104,7 @@ function getWinnerDetails(userId) {
             var winnerHTML = '<div class="span2 thumbnail alert alert-info" style="height:150px; text-align: center; position: relative;">';
             if (data.photo != null) {
                 winnerHTML += '<div ><img src="' + data.photo.thumb_link + '" /></div>';
-            }
-            else {
+            } else {
                 winnerHTML += '<div><img src="./images/nophoto.gif" /></div>';
             }
             winnerHTML += '<div><strong>' + data.name + '</strong></div>';
