@@ -15,12 +15,10 @@ $(document).ready(function ($) {
     });
 });
 
+// ajax calls
 var meetupService = new function() {
     var serviceBase = 'https://api.meetup.com',
         getEvent = function(eventId, callback) {
-            //$.getJSON(serviceBase + '/2/event/' + eventId + '?key=' + apiKey + '&callback=?', function(data) {
-            //    callback(data);
-            //});
             $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { key: apiKey }, function (data) {
                 callback(data);
             });
@@ -94,6 +92,7 @@ function chooseWinnerId() {
     //console.log("attendees length=" + attendees.length);
 }
 
+// get winner details
 function getWinnerDetails(userId) {
     meetupService.getWinnerDetails(userId, function(data) {
         if (data != null) {
