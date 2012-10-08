@@ -11,6 +11,7 @@ First, you'll need a Meetup.com API key.  They're free.
 Next, create a private.keys.js file in the scripts directory.
 
 Inset the line: var apiKey = "your_api_key_here";
+(Or check out the oAuth branch and not worry about this)
 
 ##How to choose a winner
 In the textbox for the event url, enter the direct URL of your event and press the 'Find' button.
