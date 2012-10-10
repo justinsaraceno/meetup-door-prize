@@ -10,7 +10,7 @@ $(document).ready(function ($) {
 
     $("#findEvent").click(function (e) {
         e.preventDefault;
-        getEventDetails(eventUrl.value);
+        getEventDetails($("#eventUrl").val());
         return false;
     });
 });
