@@ -1,0 +1,137 @@
+﻿<!doctype html>
+<html>
+  
+  <head>
+    <title>Meetup Door Prize</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/slate/bootstrap.min.css" rel="stylesheet">
+    <link href="content/Site.css" rel="stylesheet" />
+      
+  </head>
+  
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Meetup Door Prize</a>
+          <div class="navbar-content">
+            <ul class="nav  pull-right">
+                <li id="login">
+                    <a id="connect" href="#">Connect with Meetup</a>
+                </li>
+                <li id="member"> 
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid">
+        <div class="page-header">
+            <div class="container" id="header-logo">
+                <img src="images/meetup-door-prize-logo.gif"> 
+            </div>
+            <div class="container">
+                <br>
+                <p class="lead" id="header-text">Do you have a Meetup.com group that gives out door prizes?
+                    <br> Are you tired of handing out raffle tickets, throwing darts at the attendance
+                    sheet, or arm wrestling for your door prizes?
+                    <br> This is the better way to pick the winners.</p>
+            </div>
+        </div>
+        <div id="loggedout">
+            <div class="container">
+                <div class="hero-unit">
+                    <p>Get started:  <a href="#" class="btn btn-link btn-mini">Connect With Meetup</a></p>
+                </div>
+            </div>
+        </div>
+        <div id="loggedin" class="hidden">
+            <h2 id="meeting-title">Some Meeting Title For Your Meetup
+                <a href="#choose-meeting" class="btn btn-link btn-mini" data-toggle="modal">Change<br></a> 
+            </h2>
+            <div class="container">
+                <div class="hero-unit">
+                    <h2>Winner Name</h2>
+                    <p>City, State</p>
+                    <p>
+                        <img src="//app.divshot.com/img/placeholder-100x100.gif" class="img-polaroid"> 
+                    </p>
+                    <a class="btn" id="select-winner">Select Another</a> 
+                </div>
+            </div>
+            <div class="container">
+                <hr>
+                <p>
+                    <span>© <a href="http://www.justinsaraceno.com">Justin Saraceno</a> 2013</span> 
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- choose meeting modal -->
+      <div id="choose-meeting" class="modal hide fade" tabindex="-1" role="dialog"
+           aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel">Select a Meetup</h3>
+          </div>
+          <div class="modal-body">
+              <ul id="events"></ul>
+          </div>
+          <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true" style="">Cancel</button>
+              <button class="btn btn-primary">Save changes</button>
+          </div>
+      </div>
+      
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+      <script src="scripts/private.keys.js" type="text/javascript"></script>
+      <script src="scripts/mu.api.js" type="text/javascript"></script>
+      <script type="text/javascript">
+          // initialize api
+          api = mu.Api({
+              clientId: "jd6cpjbd8v063nkgn52dpst4g1"
+            , onMember: function (member, token) {
+                $("#connect").hide(); $("#disconnect").show();
+                $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
+                $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
+                          "&member_id=self&page=10&callback=?", function (evts) {
+                              var el = $("#events"), buff = [];
+                              $.map(evts.results, function (e) {
+                                  buff.push('<li>' + e.name.link('#') + '</li>');
+                              });
+                              el.append(buff.join(''));
+                          });
+                $("#member").html("<a href='#' id='disconnect'>Logout " + member.name + "</a>");
+                $("#choose-meeting").modal('show');
+            }
+          });
+
+          (function ($) {
+              $(function () {
+                  $("#connect").on('click', function (e) {
+                      e.preventDefault();
+                      console.log('in login');
+                      api.login();
+                      return false;
+                  });
+                  
+                  $("#member").on('click', '#disconnect', function (e) {
+                      e.preventDefault();
+                      console.log('in logout');
+                      api.logout(function () {
+                          $("#disconnect").hide(); $("#connect").show();
+                          $("loggedin").hide();
+                          window.location.reload();
+                      });
+                      return false;
+                  });
+              });
+          })(jQuery);
+    </script>
+  </body>
+
+</html>
