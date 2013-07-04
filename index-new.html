@@ -99,20 +99,22 @@
           // initialize api
           api = mu.Api({
               clientId: "jd6cpjbd8v063nkgn52dpst4g1"
-            , onMember: function (member, token) {
-                $(".connect").hide(); $("#disconnect").show();
-                $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
-                $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
-                          "&member_id=self&page=10&callback=?", function (evts) {
-                              var el = $("#events"), buff = [];
-                              $.map(evts.results, function (e) {
-                                  buff.push('<li class="eventid" value=' + e.id + '>' + e.name.link('#') + '</li>');
-                              });
-                              el.append(buff.join(''));
+              , onMember: function (member, token) {
+                  $(".connect").hide(); $("#disconnect").show();
+                  $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
+                  $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
+                      "&member_id=self&page=10&callback=?", function (evts) {
+                          var el = $("#events"), buff = [];
+                          $.map(evts.results, function (e) {
+                              buff.push('<li class="eventid" data-value=' + e.id + '>' + e.name.link('#') + '</li>');
                           });
-                $("#member").html("<a href='#' id='disconnect'>Logout " + member.name + "</a>");
-                $("#choose-meeting").modal('show');
-            }
+                          el.append(buff.join(''));
+                          console.log('adding events');
+                          addEventClick();
+                      });
+                  $("#member").html("<a href='#' id='disconnect'>Logout " + member.name + "</a>");
+                  $("#choose-meeting").modal('show');
+              }
           });
 
           (function ($) {
@@ -136,7 +138,17 @@
                   });
               });
           })(jQuery);
-    </script>
+      </script>
+      <script type="text/javascript">
+          function addEventClick() {
+              console.log('adding click event');
+              $("#events li").click(function (e) {
+                  e.preventDefault();
+                  console.log('event clicked with value:' + $(this).attr("data-value"));
+                  return false;
+              });
+          }
+      </script>
   </body>
 
 </html>
