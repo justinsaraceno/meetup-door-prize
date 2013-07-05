@@ -106,7 +106,7 @@
                       "&member_id=self&page=10&callback=?", function (evts) {
                           var el = $("#events"), buff = [];
                           $.map(evts.results, function (e) {
-                              buff.push('<li class="eventid" data-value=' + e.id + '>' + e.name.link('#') + '</li>');
+                              buff.push('<li class="eventid" data-value=' + e.id + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
                           });
                           el.append(buff.join(''));
                           console.log('adding events');
@@ -142,12 +142,39 @@
       <script type="text/javascript">
           function addEventClick() {
               console.log('adding click event');
-              $("#events li").click(function (e) {
+              $("#events li").on('click', (function(e) {
                   e.preventDefault();
-                  console.log('event clicked with value:' + $(this).attr("data-value"));
-                  return false;
-              });
+                  meetupService.getEvent($(this).attr("data-value"), function(data) {
+                      $('#meeting-title')[0].firstChild.data = data.name;
+                  });
+              }));
           }
+
+          // ajax calls
+          var meetupService = new function () {
+              var serviceBase = 'https://api.meetup.com',
+                  getEvent = function (eventId, callback) {
+                      $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { key: apiKey }, function (data) {
+                          callback(data);
+                      });
+                  },
+                  getWinnerDetails = function (userId, callback) {
+                      $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { key: apiKey }, function (data) {
+                          callback(data);
+                      });
+                  },
+                  getRsvps = function (eventId, rsvp, callback) {
+                      $.getJSON(serviceBase + '/2/rsvps?callback=?', { key: apiKey, rsvp: 'yes', event_id: eventId }, function (data) {
+                          callback(data);
+                      });
+                  };
+
+              return {
+                  getEvent: getEvent,
+                  getRsvps: getRsvps,
+                  getWinnerDetails: getWinnerDetails
+              };
+          }();
       </script>
   </body>
 
