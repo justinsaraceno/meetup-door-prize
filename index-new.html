@@ -37,7 +37,7 @@
             <div class="container" id="header-logo">
                 <img src="images/meetup-door-prize-logo.gif"> 
             </div>
-            <div class="container">
+            <div class="container" id="about">
                 <br>
                 <p class="lead" id="header-text">Do you have a Meetup.com group that gives out door prizes?
                     <br> Are you tired of handing out raffle tickets, throwing darts at the attendance
@@ -53,16 +53,20 @@
             </div>
         </div>
         <div id="loggedin" class="hidden">
-            <h2 id="meeting-title">Some Meeting Title For Your Meetup
-                <a href="#choose-meeting" class="btn btn-link btn-mini" data-toggle="modal">Change<br></a> 
-            </h2>
+            
             <div class="container">
                 <div class="hero-unit">
-                    <h2 id="winnername">Winner Name</h2>
-                    <p id="winnerlocation">City, State</p>
+                    <div class="text-center">
+                        <h2 id="meeting-title" class="bold">
+                            <a href="#choose-meeting" data-toggle="modal"><i class="icon-edit icon-white"></i></a>
+                            Some Meeting Title For Your Meetup
+                        </h2>
+                    </div>
                     <p>
                         <img id="winnerphoto" class="img-polaroid"> 
                     </p>
+                    <h2 id="winnername">Winner Name</h2>
+                    <p id="winnerlocation">City, State</p>
                     <a class="btn" id="select-winner">Select Another</a> 
                 </div>
             </div>

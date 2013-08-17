@@ -3,6 +3,7 @@ api = mu.Api({
     clientId: "jd6cpjbd8v063nkgn52dpst4g1"
     , onMember: function (member, token) {
         localStorage["token"] = token;
+        meetupService.setToken(token);
         $(".connect").hide(); $("#disconnect").show();
         $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
         $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
@@ -50,7 +51,7 @@ function addEventClick() {
         //console.log("In click event");
         var eventId = $(this).attr("data-value");
         meetupService.getEvent($(this).attr("data-value"), function (data) {
-            $('#meeting-title')[0].firstChild.data = data.name;
+            $('#meeting-title')[0].lastChild.data = data.name;
         });
 
         // get 'yes' rsvp's
@@ -99,12 +100,16 @@ var meetupService = new function () {
             $.getJSON(serviceBase + '/2/rsvps?callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
                 callback(data);
             });
+        },
+        setToken = function (apiToken) {
+            token = apiToken;
         };
 
     return {
         getEvent: getEvent,
         getRsvps: getRsvps,
-        getWinnerDetails: getWinnerDetails
+        getWinnerDetails: getWinnerDetails,
+        setToken: setToken
     };
 }();
 
