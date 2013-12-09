@@ -85,7 +85,7 @@ window.mu.Api = (function(win, $) {
             win.open(
                 authorization,
                 "Meetup",
-                ["height=", height, ",width=", width,
+                ["scrollbars=1,height=", height, ",width=", width,
                  ",top=", top, ",left=", left].join(''));    
         };
 
