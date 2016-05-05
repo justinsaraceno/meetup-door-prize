@@ -1,27 +1,42 @@
 ﻿<!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Meetup Door Prize</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/slate/bootstrap.min.css" rel="stylesheet">
+    <title>Meetup Door Prize</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" 
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/slate/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-X9JiR5BtXUXiV6R3XuMyVGefFyy+18PHpBwaMfteb/vd2RrK6Gt4KPenkQyWLxCC" crossorigin="anonymous">
+        
     <link href="content/Site.css" rel="stylesheet" />
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+    
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="./content/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
+    <nav class="navbar navbar-nav navbar-fixed-top">
+      <!--<div class="navbar-inner">-->
           <div class="container">
               <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-              </a>
-              <a class="brand" href="#">Meetup Door Prize</a>
+              </button>
+              <a class="navbar-brand" href="#">Meetup Door Prize</a>
               <!-- Everything you want hidden at 940px or less, place within here -->
-              <div class="nav-collapse collapse">
-                  <ul class="nav  pull-right">
+              <div class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav  pull-right">
                       <li id="login">
                           <a class="connect" href="#">Connect with Meetup</a>
                       </li>
@@ -30,8 +45,8 @@
                   </ul>
               </div>
           </div>
-      </div>
-    </div>
+      <!--</div>-->
+    </nav>
       <div class="container-fluid">
           <a href="https://github.com/justinsaraceno/meetup-door-prize"><img style="position: absolute; top: 41; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
           <div class="page-header hidden-phone">
@@ -48,18 +63,18 @@
           </div>
           <div id="loggedout">
               <div class="container">
-                  <div class="hero-unit">
-                      <p>Get started:  <a href="#" class="connect btn btn-link btn-mini">Connect With Meetup</a></p>
+                  <div class="jumbotron">
+                      <p>Get started:  <button type="button" class="btn btn-default btn-sm connect">Connect With Meetup</button></p>
                   </div>
               </div>
           </div>
           <div id="loggedin" class="hidden">
             
               <div class="container">
-                  <div class="hero-unit">
+                  <div class="jumbotron">
                       <div class="text-center">
                           <h2 id="meeting-title" class="bold">
-                              <a href="#choose-meeting" data-toggle="modal"><i class="icon-edit icon-white"></i></a>
+                              <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#choose-meeting"><i class="glyphicon glyphicon-edit glyphicon-white"></i></a>
                               Some Meeting Title For Your Meetup
                           </h2>
                       </div>
@@ -68,33 +83,40 @@
                       </p>
                       <h2 id="winnername">Winner Name</h2>
                       <p id="winnerlocation">City, State</p>
-                      <a class="btn" id="select-winner">Select Another</a> 
+                      <a class="btn btn-default" id="select-winner">Select Another</a> 
                   </div>
               </div>
-              <div class="container">
-                  <hr>
-                  <p>
-                      <span>© <a href="http://www.justinsaraceno.com">Justin Saraceno</a> 2013</span> 
-                  </p>
-              </div>
           </div>
+          <div class="container">
+            <hr>
+            <p>
+                <span>© <span id="year"></span> <a href="http://www.justinsaraceno.com">Justin Saraceno</a></span> 
+            </p>
+        </div>
       </div>
     <!-- choose meeting modal -->
-      <div id="choose-meeting" class="modal hide fade" tabindex="-1" role="dialog"
-           aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h3 id="myModalLabel">Select a Meetup</h3>
-          </div>
-          <div class="modal-body">
-              <ul id="events"></ul>
-          </div>
-          <div class="modal-footer">
-              <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-          </div>
+      <div id="choose-meeting" class="modal fade" id="meetingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="myModalLabel">Select a Meetup</h3>
+                </div>
+                <div class="modal-body">
+                    <ul id="events"></ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
       </div>
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-      <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+      
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" 
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
       <script src="scripts/mu.api.js" type="text/javascript"></script>
       <script src="scripts/index.js" type="text/javascript"></script>
       <script src="scripts/analytics.js"></script>

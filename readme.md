@@ -7,6 +7,3 @@ Don't you wish there was a better way?
 There is!  With this open-source project you just enter in the URL of your meetup event and press some buttons!
 
 Try it our at [http://www.meetupdoorprize.com/](http://www.meetupdoorprize.com/).
-
-##Man, that's ugly!
-Yeah, this is a work in progress.  You have some deisgn skills?  Put them to work and submit a pull request.
