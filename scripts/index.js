@@ -23,6 +23,8 @@ api = mu.Api({
 
 (function ($) {
     $(function () {
+        $("#year").text(new Date().getFullYear());
+        
         $(".connect").on('click', function (e) {
             e.preventDefault();
             //console.log('in login');
