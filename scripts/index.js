@@ -6,7 +6,8 @@ api = mu.Api({
         meetupService.setToken(token);
         $(".connect").hide(); $("#disconnect").show();
         $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
-        $.getJSON("https://api.meetup.com/self/calendar?&sign=true&photo-host=public&page=10", function (evts) {
+        $.getJSON("https://api.meetup.com/2/events?access_token=" + token +
+            "&member_id=self&time=-2d,2w&page=10&callback=?", function (evts) {
                 var el = $("#events"), buff = [];
                 $.map(evts.results, function (e) {
                     buff.push('<li class="eventid" data-value=' + e.id + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
