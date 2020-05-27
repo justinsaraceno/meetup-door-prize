@@ -9,7 +9,7 @@ api = mu.Api({
         $.getJSON("https://api.meetup.com/self/calendar?sign=true&photo-host=public&access_token=" + token +
             "&member_id=self&time=-2d,2w&page=10&callback=?", function (evts) {
                 var el = $("#events"), buff = [];
-                $.map(evts.results, function (e) {
+                $.map(evts.data, function (e) {
                     buff.push('<li class="eventid" data-value=' + e.id + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
                 });
                 el.append(buff.join(''));
