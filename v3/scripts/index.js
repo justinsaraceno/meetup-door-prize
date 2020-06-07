@@ -47,13 +47,11 @@ api = mu.Api({
 
 
 function addEventClick() {
-    //console.log('adding click event');
     $("#events li").on('click', (function (e) {
         e.preventDefault();
-        //console.log("In click event");
         var eventId = $(this).attr("data-value");
         var urlname = $(this).attr("data-urlname");
-        meetupService.getEvent($(this).attr("data-value"), urlname, function (data) {
+        meetupService.getEvent(eventId, urlname, function (data) {
             $('#meeting-title')[0].lastChild.data = data.data.name;
         });
 
