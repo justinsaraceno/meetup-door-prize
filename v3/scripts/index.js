@@ -56,7 +56,7 @@ function addEventClick() {
         });
 
         // get 'yes' rsvp's
-        meetupService.getRsvps(eventId, 'yes', function (data) {
+        meetupService.getRsvps(eventId, urlname, function (data) {
             if (data.results.length > 0) {
                 var i = 0;
                 var attendees = new Array();
@@ -97,7 +97,7 @@ var meetupService = new function () {
                 callback(data);
             });
         },
-        getRsvps = function (eventId, rsvp, callback) {
+        getRsvps = function (eventId, urlname, callback) {
             $.getJSON(serviceBase + '/' + urlname + '/events/' + eventId + '/rsvps?sign=true&photo-host=public&response=yes&callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
                 callback(data);
             });
