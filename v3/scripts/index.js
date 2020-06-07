@@ -90,7 +90,7 @@ var meetupService = new function () {
     var token = localStorage["token"];
     var serviceBase = 'https://api.meetup.com',
         getEvent = function (eventId, urlname, callback) {
-            $.getJSON(serviceBase + urlname + '/events/' + eventId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
+            $.getJSON(serviceBase + '/' + urlname + '/events/' + eventId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
                 callback(data);
             });
         },
