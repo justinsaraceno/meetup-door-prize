@@ -54,7 +54,7 @@ function addEventClick() {
         var eventId = $(this).attr("data-value");
         var urlname = $(this).attr("data-urlname");
         meetupService.getEvent($(this).attr("data-value"), urlname, function (data) {
-            $('#meeting-title')[0].lastChild.data = data.name;
+            $('#meeting-title')[0].lastChild.data = data.data.name;
         });
 
         // get 'yes' rsvp's
