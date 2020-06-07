@@ -93,7 +93,7 @@ var meetupService = new function () {
             });
         },
         getWinnerDetails = function (userId, callback) {
-            $.getJSON(serviceBase + '/2/member/' + userId + '?callback=?', { access_token: token }, function (data) {
+            $.getJSON(serviceBase + '/members/' + userId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
                 callback(data);
             });
         },
