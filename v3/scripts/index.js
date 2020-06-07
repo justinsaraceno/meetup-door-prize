@@ -57,11 +57,11 @@ function addEventClick() {
 
         // get 'yes' rsvp's
         meetupService.getRsvps(eventId, urlname, function (data) {
-            if (data.results.length > 0) {
+            if (data.data.length > 0) {
                 var i = 0;
                 var attendees = new Array();
-                for (i = 0; i < data.results.length; i++) {
-                    attendees[i] = [data.results[i].member.member_id];
+                for (i = 0; i < data.data.length; i++) {
+                    attendees[i] = [data.data[i].member.member_id];
                     //console.log("attendees array filled");
                 }
                 localStorage["attendees"] = JSON.stringify(attendees);
