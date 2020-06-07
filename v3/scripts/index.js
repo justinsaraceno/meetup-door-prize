@@ -10,7 +10,7 @@ api = mu.Api({
             "&page=10&callback=?", function (evts) {
                 var el = $("#events"), buff = [];
                 $.map(evts.data, function (e) {
-                    buff.push('<li class="eventid" data-value=' + e.id + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
+                    buff.push('<li class="eventid" data-value=' + e.id + ' data-urlname=' + e.group.urlname + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
                 });
                 el.append(buff.join(''));
                 //console.log('adding events');
@@ -52,7 +52,8 @@ function addEventClick() {
         e.preventDefault();
         //console.log("In click event");
         var eventId = $(this).attr("data-value");
-        meetupService.getEvent($(this).attr("data-value"), function (data) {
+        var urlname = $(this).attr("data-urlname");
+        meetupService.getEvent($(this).attr("data-value"), urlname, function (data) {
             $('#meeting-title')[0].lastChild.data = data.name;
         });
 
@@ -88,8 +89,8 @@ function addEventClick() {
 var meetupService = new function () {
     var token = localStorage["token"];
     var serviceBase = 'https://api.meetup.com',
-        getEvent = function (eventId, callback) {
-            $.getJSON(serviceBase + '/2/event/' + eventId + '?callback=?', { access_token: token }, function (data) {
+        getEvent = function (eventId, urlname, callback) {
+            $.getJSON(serviceBase + urlname + '/events/' + eventId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
                 callback(data);
             });
         },
