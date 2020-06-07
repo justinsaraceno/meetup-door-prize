@@ -98,7 +98,7 @@ var meetupService = new function () {
             });
         },
         getRsvps = function (eventId, rsvp, callback) {
-            $.getJSON(serviceBase + '/' + urlname + '/events/' + eventId & '/rsvps?sign=true&photo-host=public&response=yes&callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
+            $.getJSON(serviceBase + '/' + urlname + '/events/' + eventId + '/rsvps?sign=true&photo-host=public&response=yes&callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
                 callback(data);
             });
         },
