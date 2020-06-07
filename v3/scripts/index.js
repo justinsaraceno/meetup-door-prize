@@ -137,15 +137,15 @@ function getWinnerDetails(userId) {
     meetupService.getWinnerDetails(userId, function (data) {
         if (data != null) {
             //console.log("Winner chosen..");
-            if (data.photo != null) {
+            if (data.data.photo != null) {
                 //console.log("Photo found at: " + data.photo.photo_link);
-                $("#winnerphoto").attr('src', data.photo.photo_link);
+                $("#winnerphoto").attr('src', data.data.photo.photo_link);
             } else {
                 //console.log("No photo found..");
                 $("#winnerphoto").attr('src', './images/nophoto.jpg');
             }
-            $('#winnername').text(data.name);
-            $('#winnerlocation').text(data.city + ', ' + data.state);
+            $('#winnername').text(data.data.name);
+            $('#winnerlocation').text(data.data.city + ', ' + data.data.state);
         }
     });
 }
