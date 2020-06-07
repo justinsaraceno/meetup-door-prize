@@ -61,7 +61,7 @@ function addEventClick() {
                 var i = 0;
                 var attendees = new Array();
                 for (i = 0; i < data.data.length; i++) {
-                    attendees[i] = [data.data[i].member.member_id];
+                    attendees[i] = [data.data[i].member.id];
                     //console.log("attendees array filled");
                 }
                 localStorage["attendees"] = JSON.stringify(attendees);
