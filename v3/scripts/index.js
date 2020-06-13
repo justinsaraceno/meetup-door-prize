@@ -6,6 +6,7 @@ api = mu.Api({
         meetupService.setToken(token);
         $(".connect").hide(); $("#disconnect").show();
         $("#loggedout").hide(); $("#loggedin").removeClass("hidden");
+        // retrieve logged-on user's events
         $.getJSON("https://api.meetup.com/self/calendar?sign=true&photo-host=public&access_token=" + token +
             "&page=10&callback=?", function (evts) {
                 var el = $("#events"), buff = [];
@@ -13,7 +14,6 @@ api = mu.Api({
                     buff.push('<li class="eventid" data-value=' + e.id + ' data-urlname=' + e.group.urlname + ' data-dismiss="modal">' + e.name.link('#') + '</li>');
                 });
                 el.append(buff.join(''));
-                //console.log('adding events');
                 addEventClick();
             });
         $("#member").html("<a href='#' id='disconnect'>Logout " + member.name + "</a>");
@@ -23,18 +23,19 @@ api = mu.Api({
 
 (function ($) {
     $(function () {
+        // set site copyright year
         $("#year").text(new Date().getFullYear());
         
+        // wire-up login click
         $(".connect").on('click', function (e) {
             e.preventDefault();
-            //console.log('in login');
             api.login();
             return false;
         });
 
+        // wire-up logout click
         $("#member").on('click', '#disconnect', function (e) {
             e.preventDefault();
-            //console.log('in logout');
             api.logout(function () {
                 $("#disconnect").hide(); $("#connect").show();
                 $("loggedin").hide();
@@ -55,28 +56,26 @@ function addEventClick() {
             $('#meeting-title')[0].lastChild.data = data.data.name;
         });
 
-        // get 'yes' rsvp's
+        // get user's 'yes' rsvp's and attendees
         meetupService.getRsvps(eventId, urlname, function (data) {
             if (data.data.length > 0) {
                 var i = 0;
                 var attendees = new Array();
                 for (i = 0; i < data.data.length; i++) {
                     attendees[i] = [data.data[i].member.id];
-                    //console.log("attendees array filled");
                 }
                 localStorage["attendees"] = JSON.stringify(attendees);
-                //console.log("Initial attendee count: " + JSON.parse(localStorage["attendees"]).length);
-                meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {
-                    //console.log("Winner chosen as: " + winner.name);
-                });
+
+                // select initial random winner
+                meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {});
             }
             // todo: handle no attendees
         });
     }));
 
+    // wire-up select winner click event
     $("#select-winner").on('click', function (e) {
         meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {
-            //console.log("Winner chosen as: " + winner.name);
             e.preventDefault();
             return false;
         });
@@ -120,32 +119,31 @@ function chooseWinnerId() {
     // todo: address situation where all winners were chosen
     var randomRsvp = Math.floor(Math.random() * attendees.length);
     var userId = attendees[randomRsvp];
-    //console.log('winner user id=' + userId);
     getWinnerDetails(userId);
     attendees = $.grep(attendees, function (value) {
+        // remove winner from pool
         return value != userId;
     });
-    //console.log("attendees length=" + attendees.length);
+    // update canididate pool with winner removed
     localStorage["attendees"] = JSON.stringify(attendees);
-    //console.log("Attendee count updated to: " + JSON.parse(localStorage["attendees"]).length);
     return userId;
 }
 
 // get winner details
 function getWinnerDetails(userId) {
-    //console.log("getting winner details...");
     meetupService.getWinnerDetails(userId, function (data) {
         if (data != null) {
-            //console.log("Winner chosen..");
             if (data.data.photo != null) {
-                //console.log("Photo found at: " + data.photo.photo_link);
                 $("#winnerphoto").attr('src', data.data.photo.photo_link);
             } else {
-                //console.log("No photo found..");
+                // winner has no photo, use default image
                 $("#winnerphoto").attr('src', './images/nophoto.jpg');
             }
             $('#winnername').text(data.data.name);
-            $('#winnerlocation').text(data.data.city + ', ' + data.data.state);
+            $('#winnerlocation').text(data.data.city);
+            if(data.data.state != null){
+                $('#winnerlocation').append(', ' + data.data.state);
+            }
         }
     });
 }
