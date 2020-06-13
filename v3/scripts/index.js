@@ -85,7 +85,7 @@ function addEventClick() {
         //     e.preventDefault();
         //     return false;
         // });
-        var winner = chooseWinner;
+        var winner = chooseWinner();
         displayWinnerDetails(winner);
         e.preventDefault();
         return false;
