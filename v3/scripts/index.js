@@ -156,6 +156,7 @@ function chooseWinner() {
 //             }
 //         }
 //     });
+// }
 
     function displayWinnerDetails(winner){
         if (winner.photo != null) {
@@ -166,4 +167,3 @@ function chooseWinner() {
         }
         $('#winnername').text(winner.name);
     }
-}
