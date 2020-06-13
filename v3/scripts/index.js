@@ -70,10 +70,10 @@ function addEventClick() {
                 for (i = 0; i < data.data.length; i++) {
                     attendees[i] = [data.data[i].member.id];
                 }
-                localStorage["attendees"] = attendees;
+                localStorage["attendees"] = JSON.stringify(attendees);
 
-                // // select initial random winner
-                // meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {});
+                // select initial random winner
+                meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {});
             }
             // todo: handle no attendees
         });
@@ -81,14 +81,10 @@ function addEventClick() {
 
     // wire-up select winner click event
     $("#select-winner").on('click', function (e) {
-        // meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {
-        //     e.preventDefault();
-        //     return false;
-        // });
-        var winner = chooseWinner();
-        displayWinnerDetails(winner);
-        e.preventDefault();
-        return false;
+        meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {
+            e.preventDefault();
+            return false;
+        });
     });
 }
 
@@ -101,11 +97,11 @@ var meetupService = new function () {
                 callback(data);
             });
         },
-        // getWinnerDetails = function (userId, callback) {
-        //     $.getJSON(serviceBase + '/members/' + userId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
-        //         callback(data);
-        //     });
-        // },
+        getWinnerDetails = function (userId, callback) {
+            $.getJSON(serviceBase + '/members/' + userId + '?sign=true&photo-host=public&callback=?', { access_token: token }, function (data) {
+                callback(data);
+            });
+        },
         getRsvps = function (eventId, urlname, callback) {
             $.getJSON(serviceBase + '/' + urlname + '/events/' + eventId + '/rsvps?sign=true&photo-host=public&response=yes&callback=?', { access_token: token, rsvp: 'yes', event_id: eventId }, function (data) {
                 callback(data);
@@ -118,52 +114,42 @@ var meetupService = new function () {
     return {
         getEvent: getEvent,
         getRsvps: getRsvps,
-        // getWinnerDetails: getWinnerDetails,
+        getWinnerDetails: getWinnerDetails,
         setToken: setToken
     };
 }();
 
 // choose winner logic
-function chooseWinner() {
-    var attendees = localStorage["attendees"];
+function chooseWinnerId() {
+    var attendees = JSON.parse(localStorage["attendees"]);
     // todo: address situation where all winners were chosen
     var randomRsvp = Math.floor(Math.random() * attendees.length);
-    var winner = attendees[randomRsvp];
-    // getWinnerDetails(winner);
+    var userId = attendees[randomRsvp];
+    getWinnerDetails(userId);
     attendees = $.grep(attendees, function (value) {
         // remove winner from pool
-        return value != winner;
+        return value != userId;
     });
     // update canididate pool with winner removed
-    localStorage["attendees"] = attendees;
-    return winner;
+    localStorage["attendees"] = JSON.stringify(attendees);
+    return userId;
 }
 
-// // get winner details
-// function getWinnerDetails(userId) {
-//     meetupService.getWinnerDetails(userId, function (data) {
-//         if (data != null) {
-//             if (data.data.photo != null) {
-//                 $("#winnerphoto").attr('src', data.data.photo.photo_link);
-//             } else {
-//                 // winner has no photo, use default image
-//                 $("#winnerphoto").attr('src', './images/nophoto.jpg');
-//             }
-//             $('#winnername').text(data.data.name);
-//             $('#winnerlocation').text(data.data.city);
-//             if(data.data.state != null){
-//                 $('#winnerlocation').append(', ' + data.data.state);
-//             }
-//         }
-//     });
-// }
-
-    function displayWinnerDetails(winner){
-        if (winner.photo != null) {
-            $("#winnerphoto").attr('src', winner.photo.photo_link);
-        } else {
-            // winner has no photo, use default image
-            $("#winnerphoto").attr('src', './images/nophoto.jpg');
+// get winner details
+function getWinnerDetails(userId) {
+    meetupService.getWinnerDetails(userId, function (data) {
+        if (data != null) {
+            if (data.data.photo != null) {
+                $("#winnerphoto").attr('src', data.data.photo.photo_link);
+            } else {
+                // winner has no photo, use default image
+                $("#winnerphoto").attr('src', './images/nophoto.jpg');
+            }
+            $('#winnername').text(data.data.name);
+            $('#winnerlocation').text(data.data.city);
+            if(data.data.state != null){
+                $('#winnerlocation').append(', ' + data.data.state);
+            }
         }
-        $('#winnername').text(winner.name);
-    }
+    });
+}
