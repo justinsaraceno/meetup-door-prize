@@ -9,9 +9,10 @@ api = mu.Api({
         // retrieve logged-on user's events
         $.getJSON("https://api.meetup.com/self/calendar?sign=true&photo-host=public&access_token=" + token +
             "&page=10&callback=?", function (evts) {
-                if(evts.data.errors.length > 0)
+                var errors = evts.data.errors;
+                if(typeof(errors) !== 'undefined' && errors.length > 0)
                 {
-                    console.error('error code= ' + evts.data.errors[0].code + ', error message = ' + evts.data.errors[0].message);
+                    console.error('Meetup API error code=' + errors[0].code + ', message =' + errors[0].message);
                 }
 
                 var el = $("#events"), buff = [];
