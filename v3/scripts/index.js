@@ -11,7 +11,7 @@ api = mu.Api({
             "&page=10&callback=?", function (evts) {
                 if(evts.data.errors.length > 0)
                 {
-                    console.log('error code= ' + evts.data.errors[0].code + ', error message = ' + evts.data.errors[0].message);
+                    console.error('error code= ' + evts.data.errors[0].code + ', error message = ' + evts.data.errors[0].message);
                 }
 
                 var el = $("#events"), buff = [];
