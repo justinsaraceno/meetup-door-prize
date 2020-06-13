@@ -70,7 +70,7 @@ function addEventClick() {
                 for (i = 0; i < data.data.length; i++) {
                     attendees[i] = [data.data[i].member.id];
                 }
-                localStorage["attendees"] = JSON.stringify(attendees);
+                localStorage["attendees"] = attendees;
 
                 // // select initial random winner
                 // meetupService.getWinnerDetails(chooseWinnerId(), function (winner) {});
@@ -125,7 +125,7 @@ var meetupService = new function () {
 
 // choose winner logic
 function chooseWinner() {
-    var attendees = JSON.parse(localStorage["attendees"]);
+    var attendees = localStorage["attendees"];
     // todo: address situation where all winners were chosen
     var randomRsvp = Math.floor(Math.random() * attendees.length);
     var winner = attendees[randomRsvp];
@@ -135,7 +135,7 @@ function chooseWinner() {
         return value != winner;
     });
     // update canididate pool with winner removed
-    localStorage["attendees"] = JSON.stringify(attendees);
+    localStorage["attendees"] = attendees;
     return winner;
 }
 
