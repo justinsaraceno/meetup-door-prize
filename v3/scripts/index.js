@@ -119,14 +119,14 @@ function chooseWinner(){
     
         displayWinnerDetails(winner);
         // place candidate pool in localstorage
-        localStorage['attendees'] = JSON.stringify(attendees);
+        localStorage['attendeeData'] = JSON.stringify(attendees);
     }
 }
 
 function displayWinnerDetails(winner){
     $('#winnername').text(winner.member.name);
     if (winner.member.photo != null) {
-        $('#winnerphoto').attr('src', winner.photo.photo_link);
+        $('#winnerphoto').attr('src', winner.member.photo.photo_link);
     } else {
         // winner has no photo, use default image
         $('#winnerphoto').attr('src', './images/nophoto.jpg');
