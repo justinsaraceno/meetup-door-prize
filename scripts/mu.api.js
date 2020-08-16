@@ -76,7 +76,7 @@ window.mu.Api = (function(win, $) {
                 client_id + "&scope=" + scopes.join(',') + "&redirect_uri=" + redirectUri
 
         // api call to get the authorized members data
-        , member = "https://api.meetup.com/2/member/self"
+        , member = "https://api.meetup.com/members/self"
 
         , requestAuthorization = function() {
             var width = 500, height = 350
